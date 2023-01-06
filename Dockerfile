@@ -10,15 +10,6 @@ RUN apt-get update -qq && \
     apt-get autoremove -y && \
     apt-get clean all
 
-# setup ssh
-ARG GIT_SSH_KEY
-ARG KNOWN_HOSTS_CONTENT
-RUN mkdir /root/.ssh/ && \
-  echo "$KNOWN_HOSTS_CONTENT" > "/root/.ssh/known_hosts" && \
-  chmod 700 /root/.ssh/ && \
-  umask 0077 && echo "$GIT_SSH_KEY" > /root/.ssh/id_rsa && \
-  eval "$(ssh-agent -s)" && ssh-add /root/.ssh/id_rsa
-
 WORKDIR /build/
 COPY . /build/
 
@@ -34,9 +25,8 @@ ARG BUILD_ID
 
 WORKDIR /build/dio
 RUN timeout 5m dart pub get
-RUN dart test
+RUN dart test -p vm
 RUN dart analyze
-
 RUN create_publishable_artifact.sh
 
 ARG BUILD_ARTIFACTS_PUB=/build/dio/pub_package.pub.tgz
