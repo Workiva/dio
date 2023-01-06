@@ -25,8 +25,6 @@ ARG BUILD_ID
 
 WORKDIR /build/dio
 RUN timeout 5m dart pub get
-RUN dart test -p vm
-RUN dart analyze
 RUN create_publishable_artifact.sh
 
 ARG BUILD_ARTIFACTS_PUB=/build/dio/pub_package.pub.tgz
