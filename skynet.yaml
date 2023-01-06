@@ -11,6 +11,7 @@ artifacts:
 
 scripts:
   - merge_branch.sh master
+  - cd dio
   - timeout 2m dart pub get
   - dart analyze
   - dart test -p vm
@@ -27,6 +28,7 @@ timeout: 300 # 5 minutes
 
 scripts:
   - merge_branch.sh master
+  - cd dio
   - timeout 2m dart pub get
   - dart pub global activate --hosted-url https://pub.workiva.org semver_audit ^2.2.18
   - semver_audit report
