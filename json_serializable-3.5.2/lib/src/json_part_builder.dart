@@ -26,7 +26,7 @@ Builder jsonPartBuilder({
       JsonSerializableGenerator.fromSettings(settings),
       const JsonLiteralGenerator(),
     ],
-    'json_serializable',
+    'json_serializable_3_5_2',
     formatOutput: formatOutput,
   );
 }

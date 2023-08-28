@@ -23,7 +23,7 @@ class _DocBuilder extends Builder {
     final lockFileYaml =
         loadYaml(lockFileContent, sourceUrl: lockFileAssetId.uri);
     final pkgMap = lockFileYaml['packages'] as YamlMap;
-    final jsonAnnotationMap = pkgMap['json_annotation'] as YamlMap;
+    final jsonAnnotationMap = pkgMap['json_annotation_3_1_1'] as YamlMap;
     final jsonAnnotationVersionString = jsonAnnotationMap['version'] as String;
 
     final jsonAnnotationVersion =

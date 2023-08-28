@@ -27,7 +27,7 @@ Builder jsonSerializable(BuilderOptions options) {
     return jsonPartBuilder(config: config);
   } on CheckedFromJsonException catch (e) {
     final lines = <String>[
-      'Could not parse the options provided for `json_serializable`.'
+      'Could not parse the options provided for `json_serializable_3_5_2`.'
     ];
 
     if (e.key != null) {
