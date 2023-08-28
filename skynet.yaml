@@ -64,7 +64,7 @@ scripts:
   - merge_branch.sh master
   - cd json_serializable-3.5.2
   - |
-    echo "\ndependency_overrides:\n  json_annotation_3_1_1:\n    path: ../json_annotation_3_1_1" >> pubspec.yaml
+    echo -e '\ndependency_overrides:\n  json_annotation_3_1_1:\n    path: ../json_annotation_3_1_1' >> pubspec.yaml
   - git diff pubspec.yaml
   - timeout 2m dart pub get
   - cp pubspec.lock /testing/artifacts/
