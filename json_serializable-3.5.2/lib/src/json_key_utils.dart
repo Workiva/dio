@@ -152,7 +152,7 @@ JsonKey _from(FieldElement element, JsonSerializable classAnnotation) {
         }
         assert(targetEnumType != null);
         final annotatedEnumType = annotationValue.objectValue.type;
-        if (annotatedEnumType != targetEnumType) {
+        if (!_interfaceTypesEqual(annotatedEnumType, targetEnumType)) {
           throwUnsupported(
             element,
             '`$fieldName` has type '
@@ -276,4 +276,12 @@ bool _includeIfNull(
     return false;
   }
   return keyIncludeIfNull ?? classIncludeIfNull;
+}
+
+bool _interfaceTypesEqual(DartType a, DartType b) {
+  if (a is InterfaceType && b is InterfaceType) {
+    // Handle nullability case. Pretty sure this is fine for enums.
+    return a.element == b.element;
+  }
+  return a == b;
 }
