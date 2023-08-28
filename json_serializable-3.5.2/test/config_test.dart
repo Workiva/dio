@@ -6,9 +6,9 @@
 import 'dart:io';
 
 import 'package:build/build.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:json_serializable/builder.dart';
-import 'package:json_serializable/src/json_serializable_generator.dart';
+import 'package:json_annotation_3_1_1/json_annotation.dart';
+import 'package:json_serializable_3_5_2/builder.dart';
+import 'package:json_serializable_3_5_2/src/json_serializable_generator.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 

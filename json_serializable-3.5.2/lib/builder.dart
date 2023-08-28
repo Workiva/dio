@@ -13,7 +13,7 @@
 library json_serializable.builder;
 
 import 'package:build/build.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:json_annotation_3_1_1/json_annotation.dart';
 
 import 'src/json_part_builder.dart';
 

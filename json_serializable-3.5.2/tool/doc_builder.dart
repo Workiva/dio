@@ -5,7 +5,7 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:json_serializable/src/utils.dart';
+import 'package:json_serializable_3_5_2/src/utils.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:yaml/yaml.dart';
@@ -34,7 +34,7 @@ class _DocBuilder extends Builder {
         : jsonAnnotationVersion.toString();
 
     final lib = LibraryReader(await buildStep.resolver.libraryFor(
-        AssetId.resolve('package:json_annotation/json_annotation.dart')));
+        AssetId.resolve('package:json_annotation_3_1_1/json_annotation.dart')));
 
     final descriptionMap = <String, _FieldInfo>{};
 
