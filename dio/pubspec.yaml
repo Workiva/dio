@@ -16,7 +16,7 @@ environment:
 dependencies:
   async: ^2.8.2
   http_parser: ^4.0.0
-  meta: ^1.5.0
+  meta: '>=1.5.0  <1.10.0'
   path: ^1.8.0
 
 dev_dependencies:
@@ -26,3 +26,6 @@ dev_dependencies:
   crypto: ^3.0.2
   mockito: ^5.2.0
   build_runner: any
+dependency_validator:
+  ignore:
+    - meta
