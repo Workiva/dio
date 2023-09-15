@@ -71,7 +71,7 @@ T enumValueForDartObject<T>(
   List<T> items,
   String Function(T) name,
 ) =>
-    items.singleWhereOrNull((v) => source.getField(name(v)) != null);
+    items.singleWhere((v) => source.variable?.name == name(v));
 
 /// Return an instance of [JsonSerializable] corresponding to a the provided
 /// [reader].
