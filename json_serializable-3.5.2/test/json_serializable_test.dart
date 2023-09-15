@@ -14,12 +14,11 @@ Future<void> main() async {
     p.join('test', 'src'),
     '_json_serializable_test_input.dart',
   );
-  // commented out for analyzer 5 / newer test deps
-  // testAnnotatedElements(
-  //   reader,
-  //   JsonSerializableGenerator(),
-  //   expectedAnnotatedTests: _expectedAnnotatedTests,
-  // );
+  testAnnotatedElements(
+    reader,
+    JsonSerializableGenerator(),
+    expectedAnnotatedTests: _expectedAnnotatedTests,
+  );
 }
 
 const _expectedAnnotatedTests = [
