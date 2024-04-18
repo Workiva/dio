@@ -1,0 +1,137 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - _integration/**/*
+      - test_consume_workiva/**
+    tags:
+      - "**"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-image:
+    name: Build Image
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: [2.19.6]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1.6.2
+        with:
+          sdk: ${{ matrix.sdk }}
+
+      - name: Install dependencies
+        run: |
+          cd json_annotation-3.1.1
+          dart pub get
+          cd ..
+      - name: SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: ./json_annotation-3.1.1  
+          format: cyclonedx-json
+      - name: Make directory for json_annotation
+        run: mkdir json_annotation
+      - name: Generate tarball for json_annotation
+        run: |
+          cp -r json_annotation-3.1.1/CHANGELOG.md json_annotation/
+          cp -r json_annotation-3.1.1/LICENSE json_annotation/
+          cp -r json_annotation-3.1.1/lib json_annotation/
+          cp -r json_annotation-3.1.1/README.md json_annotation/
+          cp -r json_annotation-3.1.1/pubspec.yaml json_annotation/
+          echo "tar czf pub_package.pub.tgz"
+          tar czf pub_package.pub.tgz -C json_annotation .
+
+      - name: Make directory for json_serializable
+        run: mkdir json_serializable
+      - name: Generate tarball for json_serializable-3.5.2
+        run: |
+          cp -r json_serializable-3.5.2/example json_serializable/
+          cp -r json_serializable-3.5.2/lib json_serializable/
+          cp -r json_serializable-3.5.2/CHANGELOG.md json_serializable/
+          cp -r json_serializable-3.5.2/LICENSE json_serializable/
+          cp -r json_serializable-3.5.2/lib json_serializable/
+          cp -r json_serializable-3.5.2/README.md json_serializable/
+          cp -r json_serializable-3.5.2/build.yaml json_serializable/
+          cp -r json_serializable-3.5.2/pubspec.yaml json_serializable/
+          echo "tar czf pub_package.pub.tgz"
+          tar czf pub_package.pub.tgz -C json_serializable .
+
+      - name: Upload artifacts for json_annotation-3.1.1
+        uses: actions/upload-artifact@v4
+        with:
+          name: json_annotation-3.1.1-artifact
+          path: json_annotation/*
+
+      - name: Upload artifacts for json_serializable-3.5.2
+        uses: actions/upload-artifact@v4
+        with:
+          name: json_serializable-3.5.2-artifact
+          path: json_serializable/*
+  json_annotation_quality_checks:
+    name: Run Json Annotation Quality Checks
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: [2.19.6]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1.6.2
+        with:
+          sdk: ${{ matrix.sdk }}
+      - name: Make directory
+        run: mkdir artifacts
+      - name: Runs Dart analysis and unit tests
+        run: |
+          ls
+          cd json_annotation-3.1.1
+          ls
+          dart pub get
+          cp -r pubspec.lock ../artifacts/
+          dart analyze
+          dart format --set-exit-if-changed .
+          if [ -d ./test/ ]; then
+            dart test -p vm
+          else
+            echo No tests to run.
+          fi
+
+      - name: Upload test artifacts for json_annotation-3.1.1
+        uses: actions/upload-artifact@v4
+        with:
+          name: json_annotation-3.1.1-test-artifacts
+          path: artifacts/*
+  
+  json_serializable_and_json_annotation_integration:
+    name: Runs checks when pulling json_annotation into json_serializable
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: [2.19.6]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1.6.2
+        with:
+          sdk: ${{ matrix.sdk }}
+      - name: Make directory
+        run: mkdir artifacts
+      - name: Runs Dart analysis and unit tests
+        run: |
+          cd json_serializable-3.5.2
+          echo -e '\ndependency_overrides:\n  json_annotation_3_1_1:\n    path: ../json_annotation-3.1.1' >> pubspec.yaml
+          git diff pubspec.yaml
+          dart pub get
+          cp pubspec.lock -r ../artifacts/
+          dart analyze
+          dart format --set-exit-if-changed .
+          dart test -p vm
